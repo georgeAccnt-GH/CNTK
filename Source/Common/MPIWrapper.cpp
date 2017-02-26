@@ -86,6 +86,9 @@ public:
     virtual int Abort(int errorcode);
     virtual int Error_string(int errorcode, char* string, int* resultlen);
 
+    // Use GPUDirect RDMA support
+    virtual int UseGpuGdr();
+
     // allreduce of a vector
     virtual void AllReduce(std::vector<size_t>& accumulator) const;
     virtual void AllReduce(std::vector<int>& accumulator) const;
@@ -180,6 +183,9 @@ public:
     virtual int Iallreduce(const void* sendbuf, void* recvbuf, int count, MPI_Datatype datatype, MPI_Op op, /*MPI_Comm comm,*/ MPI_Request* request);
     virtual int Abort(int errorcode);
     virtual int Error_string(int errorcode, char* string, int* resultlen);
+
+    // Use GPUDirect RDMA
+    virtual int UseGpuGdr();
 
     // allreduce of a vector
     virtual void AllReduce(std::vector<size_t>& accumulator) const;
@@ -679,6 +685,15 @@ int MPIWrapperMpi::Abort(int errorcode)
 int MPIWrapperMpi::Error_string(int errorcode, char* str, int* resultlen)
 {
     return MPI_Error_string(errorcode, str, resultlen);
+}
+
+int MPIWrapperMpi::UseGpuGdr()
+{
+    // Only support GPUDirect RDMA on Unix and built with GDR
+#if defined(USE_CUDA_GDR) && defined(__unix__)
+    return 1;
+#endif
+    return 0;
 }
 
 size_t MPIWrapperMpi::NumNodesInUse() const

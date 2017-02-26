@@ -146,7 +146,7 @@ private:
             m_initialized = true;
             int deviceId = gradients[0]->GetDeviceId();
 
-            if (!m_nccl.IsSupported() && (deviceId != CPUDEVICE))
+            if (!m_mpi->UseGpuGdr() && !m_nccl.IsSupported() && deviceId != CPUDEVICE)
                 m_allocator.reset(new CUDAPageLockedMemAllocator(deviceId));
 
             size_t packedGradientsSizeInElements = 0;

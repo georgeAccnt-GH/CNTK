@@ -111,6 +111,8 @@ public:
     virtual int Abort(int errorcode) = 0;
     virtual int Error_string(int errorcode, char* string, int* resultlen) = 0;
 
+    // Use GPUDirect RDMA support
+    virtual int UseGpuGdr() = 0;
 
     // helpers to determine the MPI_Datatype of a pointer
     static MPI_Datatype GetDataType(char *);
